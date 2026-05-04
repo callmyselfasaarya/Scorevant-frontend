@@ -39,7 +39,7 @@ export default function Scoreboard() {
         p2Sets: state.p2Sets
       });
     }
-    setLocation('/');
+    setLocation('/setup');
   };
 
   if (state.status === 'setup') return null;
@@ -94,7 +94,7 @@ export default function Scoreboard() {
     <div className="min-h-[100dvh] w-full flex flex-col p-2 md:p-6 overflow-hidden max-w-4xl mx-auto relative">
       {/* Header */}
       <div className="flex justify-between items-center mb-4 md:mb-8">
-        <Button variant="ghost" size="icon" onClick={() => setLocation('/')} className="text-white/50 hover:text-white">
+        <Button variant="ghost" size="icon" onClick={() => setLocation('/setup')} className="text-white/50 hover:text-white">
           <HomeIcon className="w-5 h-5" />
         </Button>
         <div className="flex flex-col items-center gap-1">

@@ -120,6 +120,14 @@
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
 .glow-text {
   text-shadow: 0 0 10px var(--sport-accent-dim), 0 0 20px var(--sport-accent-dim);
 }
@@ -128,3 +136,26 @@
   box-shadow: 0 0 15px var(--sport-accent-dim), inset 0 0 10px var(--sport-accent-dim);
   border-color: var(--sport-accent);
 }
+
+/* Animated orbs for the hero background */
+@keyframes orb-drift-1 {
+  0%   { transform: translate(-20%, -30%); }
+  33%  { transform: translate(5%, -10%); }
+  66%  { transform: translate(-10%, 20%); }
+  100% { transform: translate(-20%, -30%); }
+}
+@keyframes orb-drift-2 {
+  0%   { transform: translate(60%, 40%); }
+  40%  { transform: translate(80%, 20%); }
+  70%  { transform: translate(50%, 60%); }
+  100% { transform: translate(60%, 40%); }
+}
+@keyframes orb-drift-3 {
+  0%   { transform: translate(30%, 70%); }
+  50%  { transform: translate(10%, 50%); }
+  100% { transform: translate(30%, 70%); }
+}
+
+.orb-1 { animation: orb-drift-1 22s ease-in-out infinite; top: 0; left: 0; }
+.orb-2 { animation: orb-drift-2 28s ease-in-out infinite; top: 0; left: 0; }
+.orb-3 { animation: orb-drift-3 35s ease-in-out infinite; top: 0; left: 0; }
