@@ -1,25 +1,13 @@
 {
-  "name": "workspace",
-  "version": "0.0.0",
-  "license": "MIT",
+  "name": "scorevant",
+  "version": "1.0.0",
+  "private": true,
   "scripts": {
-    "dev": "npm run dev --workspace=@workspace/racket-scoreboard",
-    "build": "npm run typecheck && npm run build --workspaces --if-present",
-    "typecheck:libs": "tsc --build",
-    "typecheck": "npm run typecheck:libs && npm run typecheck --workspaces --if-present"
+    "dev": "npm run dev --workspace=frontend",
+    "build": "npm run build --workspace=frontend",
+    "preview": "npm run preview --workspace=frontend"
   },
   "workspaces": [
-    "artifacts/*",
-    "lib/*",
-    "lib/integrations/*",
-    "scripts"
-  ],
-  "private": true,
-  "devDependencies": {
-    "typescript": "~5.9.2",
-    "prettier": "^3.8.1"
-  },
-  "overrides": {
-    "esbuild": "0.27.3"
-  }
+    "frontend"
+  ]
 }
