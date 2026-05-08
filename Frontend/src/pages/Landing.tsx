@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'wouter';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Menu, X, ChevronRight, Play, Trophy, Activity, Target, Zap, Clock, Github } from 'lucide-react';
+import { Menu, X, ChevronRight, Play, Trophy, Activity, Target, Zap, Clock, Github, Home, User, LogOut, ChevronDown } from 'lucide-react';
 import { FadeIn, MagneticButton, StaggerContainer } from '../components/MotionWrappers';
+import { useAuth } from '../contexts/AuthContext';
 
 const scorevantHorizontal = '/logo-horizontal.png';
 const scorevantBadge = '/brand/logo-badge.png';
 const scorevantMark = '/brand/logomark.png';
 
 const NAV_LINKS = [
+  { name: 'Home', href: '#home', icon: Home },
   { name: 'Features', href: '#features', icon: Zap },
   { name: 'Sports', href: '#sports', icon: Target },
-  { name: 'Live Match', href: '/setup', icon: Activity },
-  { name: 'History', href: '/history', icon: Clock },
+  { name: 'History', href: '#history', icon: Clock },
+  { name: 'Tournaments', href: '/tournaments', icon: Trophy },
+  { name: 'Courts', href: '/courts', icon: Activity },
 ];
 
 const GITHUB_URL = 'https://github.com/callmyselfasaarya/scorevant';
@@ -28,9 +31,25 @@ const SCORE_TICKS = [
 
 export default function Landing() {
   const [, setLocation] = useLocation();
+  const { session, user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [scoreIdx, setScoreIdx] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    if (href.startsWith('#')) {
+      const id = href.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      setLocation(href);
+    }
+    setMenuOpen(false);
+  };
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -65,7 +84,7 @@ export default function Landing() {
   const score = SCORE_TICKS[scoreIdx];
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-black text-white font-sans selection:bg-[#F4C542]/30">
+    <div id="home" className="relative min-h-screen w-full overflow-hidden bg-black text-white font-sans selection:bg-[#F4C542]/30">
       
       {/* === BACKGROUND LAYERS === */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -121,12 +140,12 @@ export default function Landing() {
               />
             </Link>
 
-            {/* Desktop Links */}
             <div className="hidden lg:flex items-center gap-8">
               {NAV_LINKS.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="group relative flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-white/50 hover:text-[#F4C542] transition-all duration-300 py-1"
                 >
                   <link.icon className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 group-hover:text-[#F4C542] transition-all" />
@@ -152,12 +171,68 @@ export default function Landing() {
                 <Github className="w-5 h-5" />
               </a>
               
-              <button
-                onClick={() => setLocation('/setup')}
-                className="hidden sm:block px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] bg-white text-black hover:bg-[#F4C542] hover:text-black transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(244,197,66,0.4)]"
-              >
-                Start Match
-              </button>
+              <div className="hidden sm:flex gap-3 relative">
+                {session ? (
+                  <div className="relative">
+                    <button
+                      onClick={() => setUserMenuOpen(!userMenuOpen)}
+                      className="group flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 hover:border-white/30 bg-black/40 hover:bg-white/5 transition-all duration-300"
+                    >
+                      <div className="w-6 h-6 rounded-full bg-[#F4C542]/20 flex items-center justify-center">
+                        <User className="w-3.5 h-3.5 text-[#F4C542]" />
+                      </div>
+                      <span className="text-xs font-bold text-white/80 group-hover:text-white transition-colors">
+                        {user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Official'}
+                      </span>
+                      <ChevronDown className={`w-3 h-3 text-white/40 transition-transform duration-300 ${userMenuOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    <AnimatePresence>
+                      {userMenuOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute right-0 mt-3 w-48 rounded-2xl border border-white/10 bg-black/80 backdrop-blur-3xl shadow-2xl overflow-hidden"
+                        >
+                          <div className="p-2 space-y-1">
+                            <button
+                              onClick={() => { setLocation('/dashboard'); setUserMenuOpen(false); }}
+                              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-white/70 hover:text-[#F4C542] hover:bg-white/5 transition-all"
+                            >
+                              <Activity className="w-4 h-4" />
+                              Dashboard
+                            </button>
+                            <button
+                              onClick={() => { logout(); setUserMenuOpen(false); }}
+                              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-red-400/70 hover:text-red-400 hover:bg-red-400/10 transition-all"
+                            >
+                              <LogOut className="w-4 h-4" />
+                              Log Out
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setLocation('/login')}
+                      className="px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-white/70 hover:text-white transition-all duration-300"
+                    >
+                      Log In
+                    </button>
+                    <button
+                      onClick={() => setLocation('/register')}
+                      className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] bg-[#F4C542] text-black hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(244,197,66,0.2)] hover:shadow-[0_0_30px_rgba(244,197,66,0.4)]"
+                    >
+                      Sign Up
+                    </button>
+                  </div>
+                )}
+              </div>
               <button
                 className="lg:hidden text-white/70 hover:text-white"
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -179,12 +254,17 @@ export default function Landing() {
             >
               <div className="flex flex-col gap-4 p-8 items-center">
                 {NAV_LINKS.map((link) => (
-                  <a key={link.name} href={link.href} className="text-lg font-bold uppercase tracking-widest text-white/70 hover:text-[#F4C542]">
+                  <a 
+                    key={link.name} 
+                    href={link.href} 
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className="text-lg font-bold uppercase tracking-widest text-white/70 hover:text-[#F4C542]"
+                  >
                     {link.name}
                   </a>
                 ))}
                 <button
-                  onClick={() => setLocation('/setup')}
+                  onClick={() => setLocation(session ? '/tournaments' : '/login')}
                   className="mt-4 w-full py-4 rounded-xl bg-[#F4C542] text-black font-black uppercase tracking-tighter"
                 >
                   Start Match
@@ -247,7 +327,7 @@ export default function Landing() {
           >
             <MagneticButton>
               <button
-                onClick={() => setLocation('/setup')}
+                onClick={() => setLocation(session ? '/tournaments' : '/login')}
                 className="group relative px-10 py-5 rounded-2xl bg-[#F4C542] text-black font-black uppercase tracking-widest text-sm hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(244,197,66,0.3)] hover:shadow-[0_0_50px_rgba(244,197,66,0.6)] flex items-center gap-3"
               >
                 Start a Match
@@ -328,8 +408,8 @@ export default function Landing() {
                       <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#F4C542] border-2 border-black shadow-[0_0_10px_#F4C542]" />
                     </div>
                     <div className="text-center">
-                      <div className="text-sm font-black uppercase tracking-tighter">Chen Long</div>
-                      <div className="text-[10px] text-white/30 uppercase font-bold">China</div>
+                      <div className="text-sm font-black uppercase tracking-tighter">Sam</div>
+                      <div className="text-[10px] text-white/30 uppercase font-bold"></div>
                     </div>
                   </div>
 
@@ -366,8 +446,8 @@ export default function Landing() {
                       <img src={scorevantMark} alt="" className="w-10 h-10 opacity-20 grayscale mix-blend-screen" />
                     </div>
                     <div className="text-center">
-                      <div className="text-sm font-black uppercase tracking-tighter">Viktor A.</div>
-                      <div className="text-[10px] text-white/30 uppercase font-bold">Denmark</div>
+                      <div className="text-sm font-black uppercase tracking-tighter">Arsath</div>
+                      <div className="text-[10px] text-white/30 uppercase font-bold"></div>
                     </div>
                   </div>
                 </div>
@@ -469,7 +549,7 @@ export default function Landing() {
               <h3 className="text-4xl md:text-6xl font-black tracking-tighter">Master Every <br /> <span className="text-white/40">Racket Sport.</span></h3>
             </FadeIn>
             <FadeIn direction="left">
-              <button onClick={() => setLocation('/setup')} className="px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:border-[#F4C542] text-xs font-black uppercase tracking-widest transition-all">
+              <button onClick={() => setLocation(session ? '/tournaments' : '/login')} className="px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:border-[#F4C542] text-xs font-black uppercase tracking-widest transition-all">
                 Configure Your Game
               </button>
             </FadeIn>
@@ -496,6 +576,79 @@ export default function Landing() {
                     <Activity className="w-3 h-3" /> {s.players}
                   </div>
                 </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* === HISTORY SECTION === */}
+      <section id="history" className="relative z-10 py-32 px-6 border-t border-white/5 bg-black">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-20">
+            <FadeIn className="max-w-2xl">
+              <h2 className="text-sm font-black uppercase tracking-[0.5em] text-[#F4C542] mb-4">Match History</h2>
+              <h3 className="text-4xl md:text-6xl font-black tracking-tighter">
+                Replay Every <br /> <span className="text-white/40">Point & Decision.</span>
+              </h3>
+              <p className="mt-6 text-white/45 text-sm md:text-base leading-relaxed font-medium">
+                Review completed matches, audit set-by-set progress, and recover from mistakes with a clean undo trail.
+                Built for officials who need confidence after the rally ends.
+              </p>
+            </FadeIn>
+            <FadeIn direction="left">
+              <button
+                onClick={() => setLocation(session ? '/tournaments' : '/login')}
+                className="px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:border-[#F4C542] text-xs font-black uppercase tracking-widest transition-all"
+              >
+                Start Recording
+              </button>
+            </FadeIn>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: 'Point Timeline',
+                desc: 'A chronological feed of points, rallies, and key events so you can reconstruct what happened instantly.',
+                icon: Clock,
+              },
+              {
+                title: 'Undo / Redo Trail',
+                desc: 'Correct scoring errors confidently with a robust history stack that preserves intent and context.',
+                icon: Activity,
+              },
+              {
+                title: 'Set-by-Set Breakdown',
+                desc: 'Jump to any set and verify service, side changes, and win conditions without manual math.',
+                icon: Trophy,
+              },
+              {
+                title: 'Shareable Summaries',
+                desc: 'Generate clean match recaps ready for coaches, players, or livestream overlays.',
+                icon: ChevronRight,
+              },
+              {
+                title: 'Fast Search',
+                desc: 'Find matches by sport, player, or date and get to the exact moment you need in seconds.',
+                icon: Target,
+              },
+              {
+                title: 'Audit-Ready',
+                desc: 'Clear visibility into scoring logic and state transitions for transparent officiating.',
+                icon: Zap,
+              },
+            ].map((h, i) => (
+              <FadeIn
+                key={h.title}
+                delay={i * 0.1}
+                className="group p-10 rounded-[2.5rem] glass-panel-heavy border border-white/5 hover:border-[#F4C542]/20 transition-all duration-500"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-8 group-hover:bg-[#F4C542]/10 transition-all">
+                  <h.icon className="w-7 h-7 text-[#F4C542]" />
+                </div>
+                <h4 className="text-xl font-black tracking-tight mb-4">{h.title}</h4>
+                <p className="text-white/40 text-sm leading-relaxed font-medium">{h.desc}</p>
               </FadeIn>
             ))}
           </div>

@@ -7,7 +7,7 @@ import { FadeIn } from '../components/MotionWrappers';
 const scorevantMark = '/brand/logomark.png';
 
 export default function HistoryPage() {
-  const { matches, clearHistory } = useMatchHistory();
+  const { history: matches, clearHistory } = useMatchHistory();
 
   return (
     <div className="relative min-h-screen w-full bg-black text-white overflow-hidden">
@@ -53,7 +53,7 @@ export default function HistoryPage() {
           </FadeIn>
         ) : (
           <div className="grid grid-cols-1 gap-6">
-            {matches.map((match, idx) => (
+            {matches.map((match: any, idx: any) => (
               <FadeIn key={match.id} delay={idx * 0.05} className="group relative glass-panel-heavy p-8 rounded-[2rem] border-white/5 hover:border-[#F4C542]/30 transition-all duration-500">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-10">
                   {/* Sport & Date */}
@@ -91,7 +91,7 @@ export default function HistoryPage() {
 
                   {/* Sets Breakdown */}
                   <div className="flex gap-2">
-                    {match.sets.map((set, i) => (
+                    {match.sets.map((set: any, i: any) => (
                       <div key={i} className="flex flex-col items-center bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
                         <span className="text-[10px] font-black text-white/80">{set.p1}</span>
                         <div className="w-4 h-[1px] bg-white/10 my-1" />

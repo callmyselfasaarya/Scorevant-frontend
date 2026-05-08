@@ -4,13 +4,13 @@ Scorevant is a professional-grade officiating assistant and live scoring platfor
 
 ## ✨ Key Features
 
-- **Multi-Sport Support**: Tailored scoring logic for Badminton, Tennis, and Table Tennis.
-- **Set & Match Tracking**: Automatic tracking of sets, match points, and win conditions.
-- **Tennis Scoring Logic**: Specialized display for Tennis (15, 30, 40, Deuce, Advantage).
+- **Cinematic Landing Page**: Premium Gold, White, and Black identity with interactive parallax backgrounds, cinematic scanline effects, and glassmorphism.
+- **High-Performance Animations**: Powered by Framer Motion, featuring Magnetic Buttons, fluid page transitions, and staggered entry animations.
+- **Dynamic Score Preview**: Real-time match preview components showcasing live scoring logic and point-by-point animations.
+- **Smooth Navigation**: Integrated smooth-scroll transitions for seamless exploration of features and sports disciplines.
+- **Multi-Sport Support**: Tailored scoring logic for Badminton, Tennis, and Table Tennis with automatic win condition detection.
 - **Undo Functionality**: Quick correction of scoring errors with a robust history stack.
-- **Premium UI/UX**: Glassmorphism aesthetic with smooth Framer Motion animations and responsive design.
-- **Match History**: Local storage-based persistence for past match results.
-- **Monorepo Architecture**: Clean separation of concerns between frontend, backend, and shared libraries.
+- **Mobile Optimized**: Fully responsive design that feels native on both mobile devices and desktops.
 
 ## 🚀 Tech Stack
 
@@ -19,78 +19,44 @@ Scorevant is a professional-grade officiating assistant and live scoring platfor
 - **Build Tool**: [Vite](https://vitejs.dev/)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **UI Components**: [Radix UI](https://www.radix-ui.com/) (Shadcn-based)
+- **Icons**: [Lucide React](https://lucide.dev/)
 - **Routing**: [Wouter](https://github.com/molecula-js/wouter)
-- **Data Fetching**: [TanStack Query v5](https://tanstack.com/query/latest)
-
-### Backend
-- **Runtime**: [Node.js v24](https://nodejs.org/)
-- **Framework**: [Express 5](https://expressjs.com/)
-- **Database**: [PostgreSQL](https://www.postgresql.org/)
-- **ORM**: [Drizzle ORM](https://orm.drizzle.team/)
-- **Logging**: [Pino](https://github.com/pinojs/pino)
-- **Validation**: [Zod](https://zod.dev/)
-
-### Infrastructure
-- **Monorepo Tool**: [pnpm Workspaces](https://pnpm.io/workspaces)
-- **API Spec**: OpenAPI 3.1
-- **Code Generation**: [Orval](https://orval.dev/) for generating React hooks and Zod schemas from OpenAPI.
-- **Build Tooling**: [esbuild](https://esbuild.github.io/) for backend bundling.
 
 ## 📂 Project Structure
 
 ```text
 .
-├── artifacts/
-│   ├── api-server/         # Express backend server
-│   ├── racket-scoreboard/  # Vite + React frontend application
-│   └── mockup-sandbox/     # Design and component testing area
-├── lib/
-│   ├── api-spec/           # OpenAPI specification (openapi.yaml)
-│   ├── api-zod/            # Generated Zod schemas
-│   ├── api-client-react/   # Generated TanStack Query hooks
-│   └── db/                 # Database schema and Drizzle configuration
-├── scripts/                # Helper scripts for development and build
-└── package.json           # Workspace configuration (npm workspaces)
+├── Frontend/           # Core React application
+│   ├── src/
+│   │   ├── components/ # Reusable UI and Motion components
+│   │   ├── pages/      # Landing, Scoreboard, and Setup pages
+│   │   ├── types/      # TypeScript definitions
+│   │   └── lib/        # Utility functions and scoring logic
+│   └── public/         # Static brand assets and logos
+├── package.json        # Project-level dependencies
+└── README.md           # Documentation
 ```
 
 ## 🛠️ Getting Started
 
 ### Prerequisites
-- Node.js v24+.
+- Node.js v20+.
 
 ### Installation
+1. Clone the repository
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-### Running Development Servers
-
-**Frontend (Scoreboard):**
+### Running Development Server
 ```bash
-npm run dev --workspace=@workspace/racket-scoreboard
+npm run dev
 ```
 
-**Backend (API Server):**
-```bash
-npm run dev --workspace=@workspace/api-server
-```
-
-### Build & Typecheck
-```bash
-# Full typecheck across all packages
-npm run typecheck
-
-# Build all packages
-npm run build
-```
-
-### API Codegen
-If you modify the OpenAPI spec in `lib/api-spec/openapi.yaml`, regenerate the hooks and schemas:
-```bash
-pnpm --filter @workspace/api-spec run codegen
-```
-
-## 📜 License
-
-MIT
+## 🎨 Design System
+Scorevant uses a bespoke "Liquid Gold" design system:
+- **Primary Color**: `#F4C542` (Gold)
+- **Background**: `#000000` (Pure Black)
+- **Accents**: Glassmorphism (White/5% - 10%)
+- **Typography**: Inter / Modern Sans-Serif
