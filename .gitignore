@@ -24,6 +24,7 @@ build/
 # Project specific
 scratch/
 artifacts/
+lib/
 scripts/
 .replit
 .replitignore

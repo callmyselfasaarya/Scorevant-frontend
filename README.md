@@ -31,7 +31,7 @@ Scorevant is a professional-grade officiating assistant, tournament manager, and
 
 ```text
 .
-├── Frontend/           # Core React application
+├── frontend/           # Core React application
 │   ├── src/
 │   │   ├── components/ # Reusable UI (Buttons, Modals, Scoreboards)
 │   │   ├── pages/      # Landing, Scoreboard, Setup, Tournaments, Spectate
@@ -67,10 +67,11 @@ npm install
 ```
 
 ### Environment Setup
-Create a `.env` file in the `Frontend/` directory:
+Create a `.env` file in the `frontend/` directory:
 ```env
 VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+VITE_API_BASE_URL=http://localhost:3000
 ```
 
 ### Running Development Servers
@@ -78,7 +79,7 @@ You will need to run both servers concurrently:
 
 **Frontend**:
 ```bash
-cd Frontend
+cd frontend
 npm run dev
 ```
 

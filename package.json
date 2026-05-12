@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "npm run dev --workspace=frontend",
-    "build": "npm run build --workspace=frontend && npx shx rm -rf public && npx shx cp -r Frontend/dist public",
+    "build": "npm run build --workspace=frontend",
     "preview": "npm run preview --workspace=frontend"
   },
   "workspaces": [
-    "Frontend"
+    "frontend"
   ],
   "dependencies": {
     "@supabase/ssr": "^0.10.3",
