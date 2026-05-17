@@ -17,20 +17,20 @@ export const colors = {
 
 export const transitions = {
   smooth: {
-    type: "spring",
+    type: "spring" as const,
     stiffness: 300,
     damping: 30,
     mass: 1
   },
   snap: {
-    type: "spring",
+    type: "spring" as const,
     stiffness: 400,
     damping: 25,
     mass: 0.8
   },
   cinematic: {
-    type: "tween",
-    ease: [0.16, 1, 0.3, 1], // expoOut
+    type: "tween" as const,
+    ease: [0.16, 1, 0.3, 1] as [number, number, number, number], // expoOut
     duration: 0.8
   }
 };

@@ -1,19 +1,37 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Model, type Types } from 'mongoose';
 import { Tournament, TournamentDocument } from '../schemas/tournament.schema';
 import { Entrant, EntrantDocument } from '../schemas/entrant.schema';
-import { TournamentMatch, TournamentMatchDocument } from '../schemas/tournament-match.schema';
+import {
+  TournamentMatch,
+  TournamentMatchDocument,
+} from '../schemas/tournament-match.schema';
 
 @Injectable()
 export class TournamentService {
   constructor(
-    @InjectModel(Tournament.name) private tournamentModel: Model<TournamentDocument>,
+    @InjectModel(Tournament.name)
+    private tournamentModel: Model<TournamentDocument>,
     @InjectModel(Entrant.name) private entrantModel: Model<EntrantDocument>,
-    @InjectModel(TournamentMatch.name) private matchModel: Model<TournamentMatchDocument>,
+    @InjectModel(TournamentMatch.name)
+    private matchModel: Model<TournamentMatchDocument>,
   ) {}
 
-  async createTournament(userId: string, data: { name: string; sportType: string; maxSets: number; entrants: { name: string; seed?: number }[] }) {
+  async createTournament(
+    userId: string,
+    data: {
+      name: string;
+      sportType: string;
+      maxSets: number;
+      entrants: { name: string; seed?: number }[];
+    },
+  ) {
     const tournament = await this.tournamentModel.create({
       name: data.name,
       sportType: data.sportType,
@@ -36,7 +54,10 @@ export class TournamentService {
     const tournament = await this.tournamentModel.findById(tournamentId);
     if (!tournament) throw new NotFoundException('Tournament not found');
 
-    const entrants = await this.entrantModel.find({ tournamentId }).sort({ seed: 1 }).exec();
+    const entrants = await this.entrantModel
+      .find({ tournamentId })
+      .sort({ seed: 1 })
+      .exec();
     const numEntrants = entrants.length;
     if (numEntrants < 2) throw new BadRequestException('Not enough entrants');
 
@@ -45,14 +66,14 @@ export class TournamentService {
     while (pow < numEntrants) pow *= 2;
     const numByes = pow - numEntrants;
 
-    // We need 'pow' slots. 
+    // We need 'pow' slots.
     // For simplicity in this implementation, we just mix entrants and nulls (byes)
     const slots: (EntrantDocument | null)[] = [...entrants];
     for (let i = 0; i < numByes; i++) {
       slots.push(null); // null represents a BYE
     }
 
-    let currentRoundEntrants = slots;
+    const currentRoundEntrants = slots;
     let roundNumber = 1;
     let currentRoundMatches: TournamentMatchDocument[] = [];
     let previousRoundMatches: TournamentMatchDocument[] = [];
@@ -62,7 +83,9 @@ export class TournamentService {
 
     while (currentRoundEntrants.length > 1 || previousRoundMatches.length > 1) {
       const isFirstRound = roundNumber === 1;
-      const numMatches = isFirstRound ? currentRoundEntrants.length / 2 : previousRoundMatches.length / 2;
+      const numMatches = isFirstRound
+        ? currentRoundEntrants.length / 2
+        : previousRoundMatches.length / 2;
       currentRoundMatches = [];
 
       for (let i = 0; i < numMatches; i++) {
@@ -105,21 +128,21 @@ export class TournamentService {
         if (!isFirstRound) {
           const prevMatch1 = previousRoundMatches[i * 2];
           const prevMatch2 = previousRoundMatches[i * 2 + 1];
-          
-          prevMatch1.nextMatchId = match._id as any;
+
+          prevMatch1.nextMatchId = match._id;
           await prevMatch1.save();
-          
-          prevMatch2.nextMatchId = match._id as any;
+
+          prevMatch2.nextMatchId = match._id;
           await prevMatch2.save();
 
           // Auto advance if previous match was already a BYE (completed)
           if (prevMatch1.winnerId) match.entrant1Id = prevMatch1.winnerId;
           if (prevMatch2.winnerId) match.entrant2Id = prevMatch2.winnerId;
-          
+
           if (match.entrant1Id && match.entrant2Id) {
-             match.status = 'Queue';
+            match.status = 'Queue';
           } else if (match.entrant1Id || match.entrant2Id) {
-              // Not fully ready, but if both were byes (rare), handle it.
+            // Not fully ready, but if both were byes (rare), handle it.
           }
           await match.save();
         }
@@ -144,18 +167,22 @@ export class TournamentService {
     if (!tournament) throw new NotFoundException('Tournament not found');
 
     const entrants = await this.entrantModel.find({ tournamentId: id }).exec();
-    const matches = await this.matchModel.find({ tournamentId: id })
-        .populate('entrant1Id', 'name')
-        .populate('entrant2Id', 'name')
-        .populate('winnerId', 'name')
-        .populate('courtId', 'name')
-        .sort({ round: 1, matchNumber: 1 })
-        .exec();
+    const matches = await this.matchModel
+      .find({ tournamentId: id })
+      .populate('entrant1Id', 'name')
+      .populate('entrant2Id', 'name')
+      .populate('winnerId', 'name')
+      .populate('courtId', 'name')
+      .sort({ round: 1, matchNumber: 1 })
+      .exec();
 
     return { tournament, entrants, matches };
   }
 
-  async updateMatch(matchId: string, data: { score?: any; winnerId?: string; status?: string }) {
+  async updateMatch(
+    matchId: string,
+    data: { score?: unknown; winnerId?: string; status?: string },
+  ) {
     const match = await this.matchModel.findById(matchId);
     if (!match) throw new NotFoundException('Match not found');
 
@@ -164,7 +191,7 @@ export class TournamentService {
     if (data.winnerId) {
       match.winnerId = data.winnerId;
       match.status = 'Completed';
-      
+
       // Advance winner to next match
       if (match.nextMatchId) {
         const nextMatch = await this.matchModel.findById(match.nextMatchId);
@@ -176,7 +203,7 @@ export class TournamentService {
           } else if (!nextMatch.entrant2Id) {
             nextMatch.entrant2Id = match.winnerId;
           }
-          
+
           if (nextMatch.entrant1Id && nextMatch.entrant2Id) {
             nextMatch.status = 'Queue';
           }

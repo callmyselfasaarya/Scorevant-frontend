@@ -4,7 +4,10 @@ import { TournamentController } from './tournament.controller';
 import { TournamentService } from './tournament.service';
 import { Tournament, TournamentSchema } from '../schemas/tournament.schema';
 import { Entrant, EntrantSchema } from '../schemas/entrant.schema';
-import { TournamentMatch, TournamentMatchSchema } from '../schemas/tournament-match.schema';
+import {
+  TournamentMatch,
+  TournamentMatchSchema,
+} from '../schemas/tournament-match.schema';
 
 @Module({
   imports: [
@@ -15,6 +18,6 @@ import { TournamentMatch, TournamentMatchSchema } from '../schemas/tournament-ma
     ]),
   ],
   controllers: [TournamentController],
-  providers: [TournamentService]
+  providers: [TournamentService],
 })
 export class TournamentModule {}

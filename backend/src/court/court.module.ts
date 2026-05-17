@@ -3,7 +3,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CourtController } from './court.controller';
 import { CourtService } from './court.service';
 import { Court, CourtSchema } from '../schemas/court.schema';
-import { TournamentMatch, TournamentMatchSchema } from '../schemas/tournament-match.schema';
+import {
+  TournamentMatch,
+  TournamentMatchSchema,
+} from '../schemas/tournament-match.schema';
 import { Umpire, UmpireSchema } from '../schemas/umpire.schema';
 
 @Module({
@@ -15,6 +18,6 @@ import { Umpire, UmpireSchema } from '../schemas/umpire.schema';
     ]),
   ],
   controllers: [CourtController],
-  providers: [CourtService]
+  providers: [CourtService],
 })
 export class CourtModule {}

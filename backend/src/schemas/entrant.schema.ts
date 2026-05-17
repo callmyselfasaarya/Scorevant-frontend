@@ -11,7 +11,11 @@ export class Entrant {
   @Prop()
   seed?: number;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Tournament', required: true })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Tournament',
+    required: true,
+  })
   tournamentId: string;
 }
 

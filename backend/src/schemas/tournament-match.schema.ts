@@ -5,7 +5,11 @@ export type TournamentMatchDocument = TournamentMatch & Document;
 
 @Schema({ timestamps: true })
 export class TournamentMatch {
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Tournament', required: true })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Tournament',
+    required: true,
+  })
   tournamentId: string;
 
   @Prop({ required: true })
@@ -39,9 +43,14 @@ export class TournamentMatch {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Umpire', default: null })
   umpireId?: string | null;
-  
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'TournamentMatch', default: null })
+
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'TournamentMatch',
+    default: null,
+  })
   nextMatchId?: string | null; // ID of the match the winner advances to
 }
 
-export const TournamentMatchSchema = SchemaFactory.createForClass(TournamentMatch);
+export const TournamentMatchSchema =
+  SchemaFactory.createForClass(TournamentMatch);

@@ -11,7 +11,11 @@ export class Court {
   @Prop({ required: true, enum: ['Idle', 'In Use'], default: 'Idle' })
   status: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'TournamentMatch', default: null })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'TournamentMatch',
+    default: null,
+  })
   currentMatchId?: string;
 }
 

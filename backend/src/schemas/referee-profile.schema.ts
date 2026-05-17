@@ -18,4 +18,5 @@ export class RefereeProfile {
   totalMatchesOfficiated: number;
 }
 
-export const RefereeProfileSchema = SchemaFactory.createForClass(RefereeProfile);
+export const RefereeProfileSchema =
+  SchemaFactory.createForClass(RefereeProfile);

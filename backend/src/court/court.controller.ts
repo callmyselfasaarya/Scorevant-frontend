@@ -21,7 +21,10 @@ export class CourtController {
   }
 
   @Put(':id/assign')
-  assignMatchToCourt(@Param('id') courtId: string, @Body() data: { matchId: string }) {
+  assignMatchToCourt(
+    @Param('id') courtId: string,
+    @Body() data: { matchId: string },
+  ) {
     return this.courtService.assignMatchToCourt(data.matchId, courtId);
   }
 
