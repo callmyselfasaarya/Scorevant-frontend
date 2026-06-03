@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, Link } from 'wouter';
 import { useMatchState } from '../hooks/useMatchState';
 import { useMatchHistory } from '../hooks/useMatchHistory';
 import { getTennisScoreDisplay } from '../lib/scoring';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, Trophy, Home as HomeIcon, ChevronLeft } from 'lucide-react';
+import { RotateCcw, Trophy, Home as HomeIcon, ChevronLeft, Copy, Check, X } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const scorevantHorizontal = '/logo-horizontal.png';
@@ -13,6 +13,14 @@ export default function Scoreboard() {
   const [, setLocation] = useLocation();
   const { state, startMatch, scoreP1, scoreP2, undo } = useMatchState();
   const { saveMatch } = useMatchHistory();
+  const [showLinkModal, setShowLinkModal] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(`${window.location.origin}/spectate/${state.matchId}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   // Parallax movement
   const mouseX = useMotionValue(0);
@@ -288,19 +296,65 @@ export default function Scoreboard() {
               <>
                 <div className="w-[1px] h-4 bg-white/10" />
                 <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(`${window.location.origin}/spectate/${state.matchId}`);
-                    alert("Spectator link copied to clipboard!");
-                  }}
+                  onClick={() => setShowLinkModal(true)}
                   className="text-[10px] font-black uppercase tracking-widest text-[#F4C542] hover:text-white transition-colors"
                 >
-                  Copy Live Link
+                  Live Link
                 </button>
               </>
             )}
           </div>
         </footer>
       </div>
+
+      {/* Live Link Modal */}
+      <AnimatePresence>
+        {showLinkModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 10 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 10 }}
+              className="w-full max-w-md overflow-hidden border rounded-3xl border-white/10 bg-zinc-900 shadow-2xl relative"
+            >
+              <button 
+                onClick={() => setShowLinkModal(false)}
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 text-white/50 hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <div className="p-8 text-center space-y-6">
+                <div className="mx-auto w-12 h-12 rounded-full bg-[#F4C542]/10 flex items-center justify-center mb-2 border border-[#F4C542]/20">
+                  <Trophy className="w-6 h-6 text-[#F4C542]" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-white">Spectator Link</h3>
+                  <p className="text-sm text-white/60">
+                    Share this link so others can watch the match live.
+                  </p>
+                </div>
+                
+                <div className="flex items-center gap-2 bg-black/50 border border-white/10 rounded-xl p-2">
+                  <div className="flex-1 overflow-x-auto text-xs text-white/80 font-mono text-left px-2 whitespace-nowrap scrollbar-hide">
+                    {`${window.location.origin}/spectate/${state.matchId}`}
+                  </div>
+                  <button
+                    onClick={handleCopyLink}
+                    className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-[#F4C542] text-black hover:bg-white transition-colors"
+                  >
+                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

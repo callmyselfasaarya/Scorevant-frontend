@@ -163,7 +163,7 @@ export default function Home() {
                 <MagneticButton>
                   <Button 
                     onClick={handleStart}
-                    className="w-full h-16 text-sm font-black uppercase tracking-[0.2em] bg-[#F4C542] text-black hover:bg-white transition-all duration-300 rounded-2xl shadow-xl"
+                    className="w-full h-16 text-sm font-black uppercase tracking-[0.2em] bg-[#F4C542] text-black hover:bg-white transition-all duration-100 rounded-2xl shadow-xl"
                   >
                     Start Scoring Match
                     <MoveRight className="ml-3 w-5 h-5" />
