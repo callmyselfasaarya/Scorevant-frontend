@@ -1,9 +1,24 @@
 import { NestFactory } from '@nestjs/core';
+import helmet from 'helmet';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors(); // Enable CORS for frontend
+  app.use(helmet());
+  app.enableCors({
+    origin: [
+      'https://scorevant.vercel.com',
+      'https://www.scorevant.vercel.com',
+    ],
+    credentials: true,
+  });
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap().catch((err) => {

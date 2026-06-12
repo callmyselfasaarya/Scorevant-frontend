@@ -6,6 +6,7 @@ import { useLocation } from "wouter";
 import { Plus, Trophy, Activity, ArrowRight, Loader2 } from "lucide-react";
 import { PageTransition, StaggerContainer, FadeIn } from "@/components/MotionWrappers";
 import { motion } from "framer-motion";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
 export default function Tournaments() {
   const [, setLocation] = useLocation();
@@ -150,9 +151,8 @@ export default function Tournaments() {
             {/* Tournaments List */}
             <div className="lg:col-span-2">
               {isLoading ? (
-                <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-white/50 space-y-4">
-                  <Loader2 className="w-8 h-8 animate-spin text-[#F4C542]" />
-                  <p className="text-xs uppercase tracking-[0.2em] font-bold">Loading Data...</p>
+                <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
+                  <LoadingScreen text="Loading Data..." />
                 </div>
               ) : tournaments?.length === 0 ? (
                 <FadeIn delay={0.3} className="h-full">

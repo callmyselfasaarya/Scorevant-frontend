@@ -22,20 +22,20 @@ At the core of Scorevant is a robust pure-function rules engine integrated with 
 
 The engine accurately handles sport-specific scoring systems including:
 
-* Tennis Deuce and Advantage logic
-* Tiebreak scoring
-* Rally scoring formats
-* Badminton point-cap rules
-* Table Tennis match progression
-* Squash and Pickleball scoring variations
+- Tennis Deuce and Advantage logic
+- Tiebreak scoring
+- Rally scoring formats
+- Badminton point-cap rules
+- Table Tennis match progression
+- Squash and Pickleball scoring variations
 
 Key benefits include:
 
-* Deterministic state transitions
-* Instant O(1) undo and rollback operations
-* Zero known scoring edge-case failures
-* Fully predictable match history reconstruction
-* Offline-safe state recovery
+- Deterministic state transitions
+- Instant O(1) undo and rollback operations
+- Zero known scoring edge-case failures
+- Fully predictable match history reconstruction
+- Offline-safe state recovery
 
 ---
 
@@ -45,12 +45,12 @@ Scorevant includes a complete authentication layer powered by NestJS.
 
 Features include:
 
-* User registration and login
-* JWT-based authentication
-* bcrypt password hashing
-* Protected API endpoints
-* User profile retrieval
-* Secure session persistence
+- User registration and login
+- JWT-based authentication
+- bcrypt password hashing
+- Protected API endpoints
+- User profile retrieval
+- Secure session persistence
 
 Available endpoints:
 
@@ -70,14 +70,14 @@ The platform supports complete tournament lifecycle management.
 
 Administrators can:
 
-* Create tournaments
-* Register participants
-* Seed players
-* Generate brackets
-* Assign courts
-* Manage match queues
-* Launch officiated matches directly from bracket views
-* Track tournament progression in real time
+- Create tournaments
+- Register participants
+- Seed players
+- Generate brackets
+- Assign courts
+- Manage match queues
+- Launch officiated matches directly from bracket views
+- Track tournament progression in real time
 
 All tournament operations are powered by a NestJS backend and React Query-powered frontend architecture.
 
@@ -91,11 +91,11 @@ When enabled, spectators can receive live score updates without refreshing the p
 
 Features include:
 
-* Instant score propagation
-* Match state synchronization
-* Multi-device broadcasting
-* Venue display support
-* Low-latency spectator experiences
+- Instant score propagation
+- Match state synchronization
+- Multi-device broadcasting
+- Venue display support
+- Low-latency spectator experiences
 
 If Supabase is not configured, all tournament and officiating functionality remains fully operational.
 
@@ -123,11 +123,11 @@ To ensure uninterrupted operation, Scorevant provides automatic persistence usin
 
 Benefits include:
 
-* Recovery after accidental tab closure
-* Network interruption resilience
-* Automatic state restoration
-* Seamless continuation of active matches
-* Reduced risk of scoring data loss
+- Recovery after accidental tab closure
+- Network interruption resilience
+- Automatic state restoration
+- Seamless continuation of active matches
+- Reduced risk of scoring data loss
 
 ---
 
@@ -137,12 +137,12 @@ Accessibility is treated as a core platform requirement rather than an afterthou
 
 Implemented features include:
 
-* High Contrast Mode detection
-* Reduced Motion support
-* Screen reader optimization
-* Keyboard navigation support
-* Accessible modal focus trapping
-* Adaptive visual fallbacks
+- High Contrast Mode detection
+- Reduced Motion support
+- Screen reader optimization
+- Keyboard navigation support
+- Accessible modal focus trapping
+- Adaptive visual fallbacks
 
 When users enable high-contrast preferences at the operating system level, advanced visual effects such as glassmorphism are automatically replaced with accessibility-friendly alternatives.
 
@@ -154,13 +154,13 @@ Scorevant utilizes a bespoke **Liquid Gold Design System** focused on clarity, r
 
 Interface highlights include:
 
-* Glassmorphic surfaces
-* Fluid page transitions
-* Magnetic interactive controls
-* Cinematic motion design
-* Responsive layouts
-* Performance-optimized animations
-* Interactive parallax environments
+- Glassmorphic surfaces
+- Fluid page transitions
+- Magnetic interactive controls
+- Cinematic motion design
+- Responsive layouts
+- Performance-optimized animations
+- Interactive parallax environments
 
 All animations gracefully degrade when reduced-motion preferences are detected.
 
@@ -227,9 +227,9 @@ All animations gracefully degrade when reduced-motion preferences are detected.
 
 Before running the project, ensure the following dependencies are available:
 
-* Node.js v20 or newer
-* MongoDB instance
-* Supabase project (optional)
+- Node.js v20 or newer
+- MongoDB instance
+- Supabase project (optional)
 
 ---
 
@@ -369,9 +369,9 @@ After setup:
 
 Verify:
 
-* Backend is running
-* API URL matches `VITE_API_BASE_URL`
-* Port `3000` is accessible
+- Backend is running
+- API URL matches `VITE_API_BASE_URL`
+- Port `3000` is accessible
 
 ---
 
@@ -414,12 +414,12 @@ Realtime functionality is optional and does not affect core platform features.
 
 ### Visual Principles
 
-* Premium competitive sports aesthetic
-* Minimal latency perception
-* Accessibility-first interactions
-* Responsive by default
-* Motion with graceful degradation
-* High readability under tournament conditions
+- Premium competitive sports aesthetic
+- Minimal latency perception
+- Accessibility-first interactions
+- Responsive by default
+- Motion with graceful degradation
+- High readability under tournament conditions
 
 ---
 

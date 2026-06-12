@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ArrowLeft, Play, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
 export default function TournamentDetails() {
   const [match, setLocation] = useLocation();
@@ -25,7 +26,7 @@ export default function TournamentDetails() {
     },
   });
 
-  if (isLoading) return <div className="p-8 text-center">Loading tournament details...</div>;
+  if (isLoading) return <LoadingScreen fullScreen text="Loading Details..." />;
   if (!data) return <div className="p-8 text-center text-red-500">Tournament not found</div>;
 
   const { tournament, entrants, matches } = data;
