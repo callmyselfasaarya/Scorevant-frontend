@@ -14,7 +14,8 @@
     "@nestjs/throttler": "^6.5.0",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",
-    "helmet": "^8.2.0"
+    "helmet": "^8.2.0",
+    "railway": "^3.3.1"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
