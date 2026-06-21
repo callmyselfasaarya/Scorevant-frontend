@@ -60,3 +60,48 @@ export async function fetchMe(token: string): Promise<AuthUser> {
   
   return response.json();
 }
+
+export async function loginWithGoogle(idToken: string): Promise<{ access_token: string; user: AuthUser }> {
+  const response = await fetch(`${API_BASE_URL}/auth/google`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idToken }),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || 'Google login failed');
+  }
+  
+  return response.json();
+}
+
+export async function loginWithFacebook(accessToken: string): Promise<{ access_token: string; user: AuthUser }> {
+  const response = await fetch(`${API_BASE_URL}/auth/facebook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ accessToken }),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || 'Facebook login failed');
+  }
+  
+  return response.json();
+}
+
+export async function loginWithApple(identityToken: string): Promise<{ access_token: string; user: AuthUser }> {
+  const response = await fetch(`${API_BASE_URL}/auth/apple`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ identityToken }),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || 'Apple login failed');
+  }
+  
+  return response.json();
+}

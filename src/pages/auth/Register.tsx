@@ -4,6 +4,8 @@ import { FadeIn } from '../../components/MotionWrappers';
 import { Mail, Lock, Loader2, Eye, EyeOff, User, ChevronRight } from 'lucide-react';
 import { useLocation, Link } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FaGoogle, FaFacebook, FaApple } from 'react-icons/fa';
+import SocialSandboxModal from '../../components/auth/SocialSandboxModal';
 
 export default function Register() {
   const [fullName, setFullName] = useState('');
@@ -15,8 +17,11 @@ export default function Register() {
   
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [isSandboxOpen, setIsSandboxOpen] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState<'google' | 'facebook' | 'apple' | null>(null);
   
-  const { register } = useAuth();
+  const { register, loginWithGoogle, loginWithFacebook, loginWithApple } = useAuth();
   const [, setLocation] = useLocation();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -42,6 +47,134 @@ export default function Register() {
       setLocation('/login');
     } catch (err: any) {
       setError(err.message || 'An error occurred during registration');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSocialLogin = (provider: 'google' | 'facebook' | 'apple') => {
+    setError(null);
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const facebookAppId = import.meta.env.VITE_FACEBOOK_APP_ID;
+    const appleClientId = import.meta.env.VITE_APPLE_CLIENT_ID;
+
+    if (provider === 'google' && googleClientId) {
+      startRealGoogleLogin(googleClientId);
+    } else if (provider === 'facebook' && facebookAppId) {
+      startRealFacebookLogin(facebookAppId);
+    } else if (provider === 'apple' && appleClientId) {
+      startRealAppleLogin(appleClientId);
+    } else {
+      // Fallback to simulation sandbox modal in development environment
+      if (import.meta.env.DEV) {
+        setSelectedProvider(provider);
+        setIsSandboxOpen(true);
+      } else {
+        setError(`${provider.charAt(0).toUpperCase() + provider.slice(1)} configuration is missing.`);
+      }
+    }
+  };
+
+  const startRealGoogleLogin = (clientId: string) => {
+    if (!(window as any).google) {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => initRealGoogle(clientId);
+      document.head.appendChild(script);
+    } else {
+      initRealGoogle(clientId);
+    }
+  };
+
+  const initRealGoogle = (clientId: string) => {
+    const google = (window as any).google;
+    google.accounts.id.initialize({
+      client_id: clientId,
+      callback: async (response: any) => {
+        setIsSubmitting(true);
+        try {
+          await loginWithGoogle(response.credential);
+          setLocation('/dashboard');
+        } catch (err: any) {
+          setError(err.message || 'Google authentication failed.');
+        } finally {
+          setIsSubmitting(false);
+        }
+      },
+    });
+    google.accounts.id.prompt();
+  };
+
+  const startRealFacebookLogin = (appId: string) => {
+    if (!(window as any).FB) {
+      const script = document.createElement('script');
+      script.src = 'https://connect.facebook.net/en_US/sdk.js';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => initRealFacebook(appId);
+      document.head.appendChild(script);
+    } else {
+      initRealFacebook(appId);
+    }
+  };
+
+  const initRealFacebook = (appId: string) => {
+    const FB = (window as any).FB;
+    FB.init({
+      appId: appId,
+      cookie: true,
+      xfbml: true,
+      version: 'v19.0',
+    });
+    FB.login(
+      async (response: any) => {
+        if (response.authResponse) {
+          setIsSubmitting(true);
+          try {
+            await loginWithFacebook(response.authResponse.accessToken);
+            setLocation('/dashboard');
+          } catch (err: any) {
+            setError(err.message || 'Facebook authentication failed.');
+          } finally {
+            setIsSubmitting(false);
+          }
+        }
+      },
+      { scope: 'email,public_profile' }
+    );
+  };
+
+  const startRealAppleLogin = (clientId: string) => {
+    if (!(window as any).AppleID) {
+      const script = document.createElement('script');
+      script.src = 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js';
+      script.async = true;
+      script.onload = () => initRealApple(clientId);
+      document.head.appendChild(script);
+    } else {
+      initRealApple(clientId);
+    }
+  };
+
+  const initRealApple = async (clientId: string) => {
+    const AppleID = (window as any).AppleID;
+    AppleID.auth.init({
+      clientId: clientId,
+      scope: 'name email',
+      redirectURI: window.location.origin + '/login',
+      usePopup: true,
+    });
+    try {
+      const response = await AppleID.auth.signIn();
+      if (response.authorization && response.authorization.id_token) {
+        setIsSubmitting(true);
+        await loginWithApple(response.authorization.id_token);
+        setLocation('/dashboard');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Apple authentication failed.');
     } finally {
       setIsSubmitting(false);
     }
@@ -192,15 +325,62 @@ export default function Register() {
             </button>
           </form>
 
+          {/* Social Sign Up Separator */}
+          <div className="relative flex py-2 items-center">
+            <div className="flex-grow border-t border-white/5"></div>
+            <span className="flex-shrink mx-4 text-white/20 text-[10px] font-bold uppercase tracking-widest">
+              or sign up with
+            </span>
+            <div className="flex-grow border-t border-white/5"></div>
+          </div>
+
+          {/* Social Buttons */}
+          <div className="grid grid-cols-3 gap-3">
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => handleSocialLogin('google')}
+              className="flex items-center justify-center py-3 bg-white/5 border border-white/10 hover:border-white/20 rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition-all duration-300"
+            >
+              <FaGoogle className="w-5 h-5 text-[#EA4335]" />
+            </motion.button>
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => handleSocialLogin('facebook')}
+              className="flex items-center justify-center py-3 bg-white/5 border border-white/10 hover:border-white/20 rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition-all duration-300"
+            >
+              <FaFacebook className="w-5 h-5 text-[#1877F2]" />
+            </motion.button>
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => handleSocialLogin('apple')}
+              className="flex items-center justify-center py-3 bg-white/5 border border-white/10 hover:border-white/20 rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition-all duration-300"
+            >
+              <FaApple className="w-5 h-5 text-white" />
+            </motion.button>
+          </div>
+
           <div className="text-center pt-4 border-t border-white/5">
             <Link href="/login">
-              <span className="text-sm text-white/40 hover:text-white transition-colors cursor-pointer font-medium">
+              <span className="text-xs text-white/40 hover:text-white transition-colors cursor-pointer font-medium">
                 Already have an account? <span className="text-[#F4C542]">Sign in</span>
               </span>
             </Link>
           </div>
         </div>
       </FadeIn>
+
+      <SocialSandboxModal
+        isOpen={isSandboxOpen}
+        onClose={() => setIsSandboxOpen(false)}
+        provider={selectedProvider}
+        onSuccess={() => setLocation('/dashboard')}
+      />
 
       <style>{`
         .glass-panel-heavy {

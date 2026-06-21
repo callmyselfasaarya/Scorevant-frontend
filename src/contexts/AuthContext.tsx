@@ -7,6 +7,9 @@ import {
   login as apiLogin,
   register as apiRegister,
   setAccessToken,
+  loginWithGoogle as apiLoginWithGoogle,
+  loginWithFacebook as apiLoginWithFacebook,
+  loginWithApple as apiLoginWithApple,
 } from '../lib/auth-api';
 
 interface AuthContextType {
@@ -15,6 +18,9 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, fullName: string) => Promise<void>;
   logout: () => void;
+  loginWithGoogle: (idToken: string) => Promise<void>;
+  loginWithFacebook: (accessToken: string) => Promise<void>;
+  loginWithApple: (identityToken: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -23,6 +29,9 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   register: async () => {},
   logout: () => {},
+  loginWithGoogle: async () => {},
+  loginWithFacebook: async () => {},
+  loginWithApple: async () => {},
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -69,8 +78,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setUser(null);
   };
 
+  const loginWithGoogle = async (idToken: string) => {
+    const { access_token, user: authUser } = await apiLoginWithGoogle(idToken);
+    setAccessToken(access_token);
+    setUser(authUser);
+  };
+
+  const loginWithFacebook = async (accessToken: string) => {
+    const { access_token, user: authUser } = await apiLoginWithFacebook(accessToken);
+    setAccessToken(access_token);
+    setUser(authUser);
+  };
+
+  const loginWithApple = async (identityToken: string) => {
+    const { access_token, user: authUser } = await apiLoginWithApple(identityToken);
+    setAccessToken(access_token);
+    setUser(authUser);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        loginWithGoogle,
+        loginWithFacebook,
+        loginWithApple,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
