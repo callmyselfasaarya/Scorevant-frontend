@@ -28,6 +28,5 @@ lib/
 scripts/
 .replit
 .replitignore
-.npmrc
 
 .vercel
