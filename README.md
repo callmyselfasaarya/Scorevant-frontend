@@ -203,16 +203,14 @@ All animations gracefully degrade when reduced-motion preferences are detected.
 
 ```text
 .
-├── frontend/          # React 19 + Vite frontend application
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── hooks/
-│   │   ├── types/
-│   │   └── lib/
-│   └── public/
-│
-├── package.json       # Workspace configuration
+├── src/               # React 19 + Vite frontend source code
+│   ├── components/
+│   ├── pages/
+│   ├── hooks/
+│   ├── types/
+│   └── lib/
+├── public/            # Static assets
+├── package.json       # Dependencies and scripts
 └── README.md
 ```
 
@@ -239,13 +237,13 @@ Before running the project, ensure you have:
    ```
 
 2. **Install dependencies:**
-   Install workspace dependencies from the root directory:
+   Install dependencies directly in the root directory:
    ```bash
    npm install
    ```
 
 3. **Configure environment variables:**
-   Create a `.env` file inside the `frontend/` directory:
+   Create a `.env` file inside the root directory:
    ```env
    VITE_API_BASE_URL=http://localhost:3000 # URL of your backend server
 
@@ -262,12 +260,7 @@ You can start the frontend development server from the root directory:
 
 ```bash
 npm start
-```
-
-Or run it directly from the `frontend/` directory:
-
-```bash
-cd frontend
+# or
 npm run dev
 ```
 
@@ -335,7 +328,7 @@ After setup:
 Verify:
 
 - The backend server is running and accessible.
-- The `VITE_API_BASE_URL` in `frontend/.env` correctly points to your backend server URL.
+- The `VITE_API_BASE_URL` in `.env` correctly points to your backend server URL.
 - Port `3000` (or whichever port your backend uses) is accessible and not blocked by a firewall.
 
 ---
