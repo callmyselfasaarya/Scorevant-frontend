@@ -186,6 +186,9 @@ All animations gracefully degrade when reduced-motion preferences are detected.
 
 ## Backend
 
+> [!NOTE]
+> The NestJS backend code has been moved to a separate repository. This repository now contains the frontend code only, which communicates with the backend via REST API endpoints.
+
 | Category          | Technology     |
 | ----------------- | -------------- |
 | Framework         | NestJS         |
@@ -200,7 +203,7 @@ All animations gracefully degrade when reduced-motion preferences are detected.
 
 ```text
 .
-├── frontend/
+├── frontend/          # React 19 + Vite frontend application
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
@@ -209,13 +212,7 @@ All animations gracefully degrade when reduced-motion preferences are detected.
 │   │   └── lib/
 │   └── public/
 │
-├── backend/
-│   └── src/
-│       ├── auth/
-│       ├── court/
-│       ├── tournament/
-│       └── schemas/
-│
+├── package.json       # Workspace configuration
 └── README.md
 ```
 
@@ -225,86 +222,53 @@ All animations gracefully degrade when reduced-motion preferences are detected.
 
 ## Prerequisites
 
-Before running the project, ensure the following dependencies are available:
+Before running the project, ensure you have:
 
 - Node.js v20 or newer
-- MongoDB instance
-- Supabase project (optional)
+- An active backend server running (either locally from the backend repository or deployed online)
+- A Supabase project (optional, for realtime spectator channels)
 
 ---
 
-## Installation
+## Installation & Setup
 
-Clone the repository:
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd scorevant-frontend
+   ```
 
-```bash
-git clone <repository-url>
-cd scorevant
-```
+2. **Install dependencies:**
+   Install workspace dependencies from the root directory:
+   ```bash
+   npm install
+   ```
 
-Install frontend dependencies:
+3. **Configure environment variables:**
+   Create a `.env` file inside the `frontend/` directory:
+   ```env
+   VITE_API_BASE_URL=http://localhost:3000 # URL of your backend server
 
-```bash
-cd frontend
-npm install
-```
-
-Install backend dependencies:
-
-```bash
-cd ../backend
-npm install
-```
-
----
-
-## Backend Configuration
-
-Create a `.env` file inside the `backend/` directory:
-
-```env
-PORT=3000
-
-MONGODB_URI=mongodb://localhost:27017/SCOREVANT
-
-JWT_SECRET=your-jwt-secret-at-least-32-chars
-
-# Optional
-SUPABASE_JWT_SECRET=your-supabase-jwt-secret
-```
-
----
-
-## Frontend Configuration
-
-Create a `.env` file inside the `frontend/` directory:
-
-```env
-VITE_API_BASE_URL=http://localhost:3000
-
-# Optional
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
-```
+   # Optional: Supabase credentials for realtime spectator channels
+   VITE_SUPABASE_URL=https://your-project.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-anon-key
+   ```
 
 ---
 
 ## Running the Application
 
-Both services must be running simultaneously.
+You can start the frontend development server from the root directory:
 
-### Frontend
+```bash
+npm start
+```
+
+Or run it directly from the `frontend/` directory:
 
 ```bash
 cd frontend
 npm run dev
-```
-
-### Backend
-
-```bash
-cd backend
-npm start
 ```
 
 ---
@@ -351,15 +315,16 @@ Returns the authenticated user's profile information.
 
 After setup:
 
-1. Start backend and frontend services.
-2. Open the application.
-3. Create a new account using **Create One**.
-4. Sign in successfully.
-5. Confirm redirection to the dashboard.
-6. Create or access a tournament.
-7. Verify authenticated API requests.
-8. Launch a match and validate scoring functionality.
-9. Test spectator mode and live-link sharing.
+1. Ensure your backend server is running.
+2. Start the frontend application.
+3. Open the application in your browser.
+4. Create a new account using **Create One**.
+5. Sign in successfully.
+6. Confirm redirection to the dashboard.
+7. Create or access a tournament.
+8. Verify authenticated API requests.
+9. Launch a match and validate scoring functionality.
+10. Test spectator mode and live-link sharing.
 
 ---
 
@@ -369,9 +334,9 @@ After setup:
 
 Verify:
 
-- Backend is running
-- API URL matches `VITE_API_BASE_URL`
-- Port `3000` is accessible
+- The backend server is running and accessible.
+- The `VITE_API_BASE_URL` in `frontend/.env` correctly points to your backend server URL.
+- Port `3000` (or whichever port your backend uses) is accessible and not blocked by a firewall.
 
 ---
 

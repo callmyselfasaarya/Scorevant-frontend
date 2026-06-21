@@ -1,23 +1,14 @@
 {
-  "name": "scorevant",
+  "name": "scorevant-frontend",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"cd frontend && npm run dev\" \"cd backend && npm run start:dev\"",
+    "start": "npm run dev",
+    "dev": "npm run dev --workspace=frontend",
     "build": "npm run build --workspace=frontend",
     "preview": "npm run preview --workspace=frontend"
   },
   "workspaces": [
     "frontend"
-  ],
-  "dependencies": {
-    "@nestjs/throttler": "^6.5.0",
-    "@supabase/ssr": "^0.10.3",
-    "@supabase/supabase-js": "^2.105.4",
-    "helmet": "^8.2.0",
-    "railway": "^3.3.1"
-  },
-  "devDependencies": {
-    "concurrently": "^9.2.1"
-  }
+  ]
 }
