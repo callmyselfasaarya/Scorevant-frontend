@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight, FileText, Activity, Trophy, Database, Radio, Layout, Smartphone, Lock, Search } from 'lucide-react';
+import { ChevronRight, FileText, Activity, Trophy, Database, Layout, Smartphone, Lock, Search } from 'lucide-react';
 import { useLocation } from 'wouter';
 
 const SECTIONS = [
   { id: 'overview', title: 'Overview', icon: FileText },
   { id: 'architecture', title: 'Match Engine Architecture', icon: Activity },
-  { id: 'realtime', title: 'Realtime Synchronization', icon: Radio },
   { id: 'tournaments', title: 'Tournament Management', icon: Trophy },
   { id: 'persistence', title: 'Offline Persistence', icon: Database },
   { id: 'accessibility', title: 'Accessibility (A11y)', icon: Layout },
@@ -129,7 +128,7 @@ export default function Documentation() {
                 <div className="p-5 rounded-2xl bg-white/5 border border-white/5 space-y-3 hover:bg-white/10 transition-colors">
                   <Lock className="w-6 h-6 text-gold-primary" />
                   <h3 className="font-display tracking-wider text-white">Secure & Reliable</h3>
-                  <p className="text-sm text-white/50">Powered by enterprise-grade infrastructure with Supabase Auth and isolated tournament networks.</p>
+                  <p className="text-sm text-white/50">Powered by secure authentication and isolated tournament networks.</p>
                 </div>
               </div>
             </div>
@@ -154,28 +153,6 @@ export default function Documentation() {
                   <span><strong>Performance:</strong> Components only re-render precisely when match state updates, using Framer Motion layout IDs for 120fps transitions.</span>
                 </li>
               </ul>
-            </div>
-
-            {/* Realtime Section */}
-            <div id="realtime" className="scroll-mt-24 space-y-6">
-              <h1 className="text-3xl md:text-4xl font-display uppercase tracking-widest text-white border-b border-white/10 pb-4">Realtime Synchronization</h1>
-              <p className="text-white/60 leading-relaxed">
-                Scorevant leverages Supabase Realtime Channels to push live updates across the globe with sub-second latency.
-              </p>
-              <div className="p-6 rounded-2xl bg-black/50 border border-white/10 font-mono text-sm text-white/60 overflow-x-auto shadow-inner">
-                <code>
-                  <span className="text-pink-400">const</span> channel = supabase.channel(`match:${'{'}activeMatchId{'}'}`);<br/><br/>
-                  <span className="text-white/40">// Umpire broadcasts state change</span><br/>
-                  channel.send({'{'}<br/>
-                  &nbsp;&nbsp;type: <span className="text-green-400">'broadcast'</span>,<br/>
-                  &nbsp;&nbsp;event: <span className="text-green-400">'match_update'</span>,<br/>
-                  &nbsp;&nbsp;payload: state<br/>
-                  {'}'});
-                </code>
-              </div>
-              <p className="text-white/60 leading-relaxed mt-4">
-                Spectators navigating to the `/spectate/:id` route automatically subscribe to this channel. The `Spectate.tsx` component receives the broadcast payload and updates its local React state, rendering the exact same live Scoreboard the umpire sees.
-              </p>
             </div>
 
             {/* Tournaments Section */}

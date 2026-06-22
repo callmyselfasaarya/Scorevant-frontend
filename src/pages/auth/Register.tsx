@@ -42,9 +42,8 @@ export default function Register() {
 
     try {
       await register(email, password, fullName);
-      // Wait for confirmation or immediately redirect (depends on Supabase settings)
-      alert('Registration successful! Please check your email to verify your account.');
-      setLocation('/login');
+      // Redirect to home page
+      setLocation('/');
     } catch (err: any) {
       setError(err.message || 'An error occurred during registration');
     } finally {
@@ -96,7 +95,7 @@ export default function Register() {
         setIsSubmitting(true);
         try {
           await loginWithGoogle(response.credential);
-          setLocation('/dashboard');
+          setLocation('/');
         } catch (err: any) {
           setError(err.message || 'Google authentication failed.');
         } finally {
@@ -134,7 +133,7 @@ export default function Register() {
           setIsSubmitting(true);
           try {
             await loginWithFacebook(response.authResponse.accessToken);
-            setLocation('/dashboard');
+            setLocation('/');
           } catch (err: any) {
             setError(err.message || 'Facebook authentication failed.');
           } finally {
@@ -171,7 +170,7 @@ export default function Register() {
       if (response.authorization && response.authorization.id_token) {
         setIsSubmitting(true);
         await loginWithApple(response.authorization.id_token);
-        setLocation('/dashboard');
+        setLocation('/');
       }
     } catch (err: any) {
       setError(err.message || 'Apple authentication failed.');
@@ -379,7 +378,7 @@ export default function Register() {
         isOpen={isSandboxOpen}
         onClose={() => setIsSandboxOpen(false)}
         provider={selectedProvider}
-        onSuccess={() => setLocation('/dashboard')}
+        onSuccess={() => setLocation('/')}
       />
 
       <style>{`

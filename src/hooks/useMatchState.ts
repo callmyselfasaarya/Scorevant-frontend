@@ -1,7 +1,6 @@
-import { useReducer, useCallback, useEffect, useRef } from 'react';
+import { useReducer, useCallback, useEffect } from 'react';
 import { MatchState, Sport } from '../types/match';
 import { scorePoint } from '../lib/scoring';
-import { getSupabaseClient } from '../lib/supabase';
 
 type MatchAction = 
   | { type: 'START_MATCH'; payload: { id: string, sport: Sport, player1: string, player2: string, bestOf: 3 | 5 } }
@@ -176,44 +175,10 @@ export function useMatchState(spectatorMode: boolean = false, matchIdToSpectate?
     return initial;
   });
 
-  const channelRef = useRef<any>(null);
-
-  // Setup Realtime Synchronization
-  useEffect(() => {
-    const activeMatchId = spectatorMode ? matchIdToSpectate : state.matchId;
-    if (!activeMatchId) return;
-
-    const supabase = getSupabaseClient();
-    if (!supabase) return;
-
-    const channel = supabase.channel(`match:${activeMatchId}`);
-    channelRef.current = channel;
-
-    if (spectatorMode) {
-      channel.on('broadcast', { event: 'match_update' }, (payload) => {
-        dispatch({ type: 'SYNC_STATE', payload: payload.payload });
-      }).subscribe();
-    } else {
-      channel.subscribe();
-    }
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [state.matchId, spectatorMode, matchIdToSpectate]);
-
-  // Persist state & Broadcast changes
+  // Persist state
   useEffect(() => {
     if (!spectatorMode && state.status !== 'setup') {
       localStorage.setItem('scorevant_active_match', JSON.stringify(state));
-      
-      if (channelRef.current && state.matchId) {
-        channelRef.current.send({
-          type: 'broadcast',
-          event: 'match_update',
-          payload: state
-        });
-      }
     }
     
     if (!spectatorMode && state.status === 'finished') {

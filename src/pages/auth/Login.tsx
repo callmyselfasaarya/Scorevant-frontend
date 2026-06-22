@@ -27,7 +27,7 @@ export default function Login() {
 
     try {
       await login(email, password);
-      setLocation('/dashboard');
+      setLocation('/');
     } catch (err: any) {
       setError(err.message || 'Invalid login credentials');
     } finally {
@@ -79,7 +79,7 @@ export default function Login() {
         setIsSubmitting(true);
         try {
           await loginWithGoogle(response.credential);
-          setLocation('/dashboard');
+          setLocation('/');
         } catch (err: any) {
           setError(err.message || 'Google authentication failed.');
         } finally {
@@ -117,7 +117,7 @@ export default function Login() {
           setIsSubmitting(true);
           try {
             await loginWithFacebook(response.authResponse.accessToken);
-            setLocation('/dashboard');
+            setLocation('/');
           } catch (err: any) {
             setError(err.message || 'Facebook authentication failed.');
           } finally {
@@ -154,7 +154,7 @@ export default function Login() {
       if (response.authorization && response.authorization.id_token) {
         setIsSubmitting(true);
         await loginWithApple(response.authorization.id_token);
-        setLocation('/dashboard');
+        setLocation('/');
       }
     } catch (err: any) {
       setError(err.message || 'Apple authentication failed.');
@@ -318,7 +318,7 @@ export default function Login() {
         isOpen={isSandboxOpen}
         onClose={() => setIsSandboxOpen(false)}
         provider={selectedProvider}
-        onSuccess={() => setLocation('/dashboard')}
+        onSuccess={() => setLocation('/')}
       />
 
       {/* Glassmorphism Styles */}

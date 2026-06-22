@@ -83,23 +83,7 @@ All tournament operations are powered by a NestJS backend and React Query-powere
 
 ---
 
-### Realtime Spectator Broadcasting
 
-Scorevant supports optional realtime synchronization through Supabase Realtime channels.
-
-When enabled, spectators can receive live score updates without refreshing the page.
-
-Features include:
-
-- Instant score propagation
-- Match state synchronization
-- Multi-device broadcasting
-- Venue display support
-- Low-latency spectator experiences
-
-If Supabase is not configured, all tournament and officiating functionality remains fully operational.
-
----
 
 ### Spectator Display Mode
 
@@ -176,7 +160,6 @@ All animations gracefully degrade when reduced-motion preferences are detected.
 | Language         | TypeScript               |
 | State Management | React Hooks + useReducer |
 | Data Fetching    | React Query              |
-| Realtime         | Supabase JS (Optional)   |
 | Styling          | Tailwind CSS v4          |
 | Animations       | Framer Motion            |
 | Icons            | Lucide React             |
@@ -224,7 +207,6 @@ Before running the project, ensure you have:
 
 - Node.js v20 or newer
 - An active backend server running (either locally from the backend repository or deployed online)
-- A Supabase project (optional, for realtime spectator channels)
 
 ---
 
@@ -246,10 +228,6 @@ Before running the project, ensure you have:
    Create a `.env` file inside the root directory:
    ```env
    VITE_API_BASE_URL=http://localhost:3000 # URL of your backend server
-
-   # Optional: Supabase credentials for realtime spectator channels
-   VITE_SUPABASE_URL=https://your-project.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-key
    ```
 
 ---
@@ -345,18 +323,6 @@ SCOREVANT
 
 ---
 
-### Spectator Updates Not Synchronizing
-
-Verify:
-
-```env
-VITE_SUPABASE_URL
-VITE_SUPABASE_ANON_KEY
-```
-
-Realtime functionality is optional and does not affect core platform features.
-
----
 
 # Design System
 
