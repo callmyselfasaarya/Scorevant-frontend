@@ -67,7 +67,7 @@ export const api = {
     list: async (): Promise<Tournament[]> => {
       return fetchWithAuth('/tournaments');
     },
-    create: async (data: { name: string; sportType: string; maxSets: number; entrants: { name: string; seed?: number }[] }) => {
+    create: async (data: { name: string; sportType: string; maxSets: number; entrants: { name: string; seed?: number }[]; courtId?: string }) => {
       return fetchWithAuth('/tournaments', {
         method: 'POST',
         body: JSON.stringify(data),

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api, Tournament } from "@/lib/api";
+import { api, Tournament, Court } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { Plus, Trophy, Activity, ArrowRight, Loader2 } from "lucide-react";
@@ -14,10 +14,16 @@ export default function Tournaments() {
   const [name, setName] = useState("");
   const [sportType, setSportType] = useState("Tennis");
   const [entrantsText, setEntrantsText] = useState("");
+  const [selectedCourtId, setSelectedCourtId] = useState("");
 
   const { data: tournaments, isLoading } = useQuery<Tournament[]>({
     queryKey: ["tournaments"],
     queryFn: api.tournaments.list,
+  });
+
+  const { data: courts } = useQuery<Court[]>({
+    queryKey: ["courts"],
+    queryFn: api.courts.list,
   });
 
   const createMutation = useMutation({
@@ -25,7 +31,9 @@ export default function Tournaments() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tournaments"] });
       setName("");
+      setSportType("Tennis");
       setEntrantsText("");
+      setSelectedCourtId("");
     },
   });
 
@@ -40,8 +48,9 @@ export default function Tournaments() {
     createMutation.mutate({
       name,
       sportType,
-      maxSets: sportType === "Badminton" ? 3 : sportType === "Tennis" ? 3 : 5, // Example default
+      maxSets: sportType === "Badminton" ? 3 : sportType === "Tennis" ? 3 : 5,
       entrants: entrantsList,
+      courtId: selectedCourtId || undefined,
     });
   };
 
@@ -109,6 +118,22 @@ export default function Tournaments() {
                         <option value="Badminton" className="bg-zinc-900">Badminton</option>
                         <option value="Tennis" className="bg-zinc-900">Tennis</option>
                         <option value="Table Tennis" className="bg-zinc-900">Table Tennis</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 ml-1">Select Court (Optional)</label>
+                      <select 
+                        value={selectedCourtId} 
+                        onChange={e => setSelectedCourtId(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#F4C542]/50 focus:bg-white/10 transition-all appearance-none cursor-pointer"
+                      >
+                        <option value="" className="bg-zinc-900">No court selected</option>
+                        {courts?.map(court => (
+                          <option key={court._id} value={court._id} className="bg-zinc-900">
+                            {court.name} ({court.status})
+                          </option>
+                        ))}
                       </select>
                     </div>
 

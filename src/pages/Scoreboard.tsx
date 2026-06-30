@@ -65,7 +65,7 @@ export default function Scoreboard() {
         p2Sets: state.p2Sets
       });
     }
-    setLocation('/setup');
+    setLocation('/history');
   };
 
   if (state.status === 'setup') return null;
